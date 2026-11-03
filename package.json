@@ -1,0 +1,16 @@
+{
+  "name": "chainroom",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "bootstrap": "node scripts/bootstrap.mjs",
+    "install:controller": "node scripts/install-controller.mjs",
+    "prepare:demo": "node scripts/prepare-demo.mjs",
+    "enroll": "node scripts/setup-switch.mjs enroll",
+    "provision": "node scripts/setup-switch.mjs provision",
+    "status": "node scripts/setup-switch.mjs status",
+    "demo:test": "npm --prefix demo test"
+  }
+}

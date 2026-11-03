@@ -1,0 +1,4 @@
+services:
+  switch:
+    environment:
+      CONTROLLER_RELEASE_VERSION: ${CONTROLLER_RELEASE_VERSION}

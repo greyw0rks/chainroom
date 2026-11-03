@@ -1,0 +1,37 @@
+version: 1
+params:
+  machine:
+    type: machine
+    description: Enrolled Debian controller
+    default: [$first]
+  workspace_root:
+    type: directory
+    description: Existing workspace root
+  bridge:
+    type: bridge
+    description: Bundled Mattermost connection
+    default: [$first]
+agents:
+  - name: chainroom-connection-check
+    description: Verifies real Codex messages through Switch and Mattermost
+    addressing: anyone
+    provider: codex
+    machine: "{machine}"
+    directory: "{workspace_root}/triage"
+    auto_mode: true
+    auto_approve: false
+    instructions: |
+      You verify the Switch-to-Codex connection. Reply through your Switch
+      tools in the same room and thread. For an incident report, restate the
+      symptom, classify the category and severity, list missing information
+      and recommend the next action. Do not run commands, modify code,
+      create other agents, publish or deploy anything. Do not invent evidence.
+room:
+  name: chainroom-connection-check
+  description: First real Mattermost and Codex connection test
+  bridge: "{bridge}"
+  channel_type: channel_private
+  read_visibility: private
+  write_visibility: private
+  agents: [chainroom-connection-check]
+  users: ["{$creator}"]
