@@ -23,9 +23,9 @@ export async function connect() {
   const cookie = response.headers.getSetCookie().map(value => value.split(';')[0]).join('; ');
   if (!cookie) throw new Error('Switch returned no authenticated session cookie');
   const user = await response.json();
-  return { user, request: async (path, body) => {
+  return { user, request: async (path, body, options = {}) => {
     const response = await fetch(base+path, {
-      method: body === undefined ? 'GET' : 'POST',
+      method: options.method ?? (body === undefined ? 'GET' : 'POST'),
       headers: { cookie, 'content-type': 'application/json' },
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),
       signal: AbortSignal.timeout(45000)
@@ -34,6 +34,8 @@ export async function connect() {
       // Error payloads can include submitted settings. Keep them private.
       throw new Error(`Switch ${path} failed: HTTP ${response.status}`);
     }
-    return response.status === 204 ? null : response.json();
+    if (response.status === 204) return null;
+    const text = await response.text();
+    return text.trim() ? JSON.parse(text) : null;
   }};
 }

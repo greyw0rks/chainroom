@@ -1,0 +1,11 @@
+import { mkdir, writeFile } from "node:fs/promises";
+import { resolve } from "node:path";
+import { root } from "./lib/switch.mjs";
+import { inspectPublication } from "../src/publication-inspection.mjs";
+const [incident, roomId, threadId] = process.argv.slice(2);
+if (process.argv.length !== 5) throw new Error("Usage: inspect-publication.mjs CR-001 <room ID> <thread ID>");
+const { result } = await inspectPublication({ incident, roomId, threadId });
+await mkdir(resolve(root, ".runtime/evidence"), { recursive: true, mode: 0o700 });
+await writeFile(resolve(root, ".runtime/evidence/publication-eligibility.json"), JSON.stringify({ checked_at: new Date().toISOString(), ...result }, null, 2) + "\n", { mode: 0o600 });
+console.log(JSON.stringify(result, null, 2));
+if (!result.allowed) process.exitCode = 1;

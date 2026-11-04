@@ -1,32 +1,29 @@
 # Build status
 
-Started November 3, 2026. This file reports evidence, not target behavior.
+Started November 3, 2026. Updated November 4 at 20:49 UTC. This file distinguishes live evidence from fixture checks.
 
-- [x] Codex CLI 0.166.0, Node 22.23.4 and Git 2.47.3 available in Debian/WSL.
-- [x] Official Switch documentation MCP added to existing Codex configuration.
-- [x] Codex provider reachability passed outside the sandbox; original thread-history integrity failure remains untouched.
-- [x] Docker Engine 26.1.5 and Compose 2.26.1 installed in Debian.
-- [x] Switch server 0.31.0 Compose file downloaded and local secrets generated.
-- [x] Three-agent Switch template and detailed blueprint written.
-- [x] TypeScript demo run: four tests pass and two USDC tests fail with actual incorrect balances.
-- [ ] Switch, Mattermost and database containers healthy.
-- [x] Official controller installed; release-2026-10 signature verified, package SHA-256 `8f096275edde4b87dacea9c565c96b30eef756156274149c64cc40b582ac09bf`.
-- [x] Native Codex app-server inspected: `accountType=null`, `requiresOpenaiAuth=false`; existing AgentRouter credential present, no OpenAI sign-in required.
-- [x] Separate demo Git repository at `.runtime/demo-repo`, initial commit `c719c0f5d7c56140dd7891f9a1ba63ad6b84d096`, actual baseline evidence `.runtime/evidence/baseline.json`.
-- [ ] Controller enrolled and online.
-- [ ] Installed server validates and provisions template.
-- [ ] Codex replies to a human Mattermost message through Switch.
-- [ ] Triage delegates through Switch to Engineer.
-- [ ] Engineer creates isolated worktree and tested commit.
-- [ ] Sentinel independently verifies the commit.
-- [ ] Human approval on reviewed SHA recorded.
-- [ ] Deterministic publication gate implemented and failure cases tested.
-- [ ] Real GitHub PR published.
-- [ ] Minimal live evidence dashboard.
-- [ ] Actual demo video and public submission repository.
+- [x] Debian/WSL Codex CLI 0.166.0, Node 22.23.4, Git 2.47.3 and Docker/Compose installed.
+- [x] Pinned Switch server 0.31.0, Mattermost and PostgreSQL healthy; current stack check returns HTTP 200 for all three service probes.
+- [x] Official signed controller 0.31.1-dev.277.g2d72c57 installed, enrolled and connected; signer and package SHA-256 remain recorded in the blueprint.
+- [x] Windows browser access verified at numeric loopback addresses (Mattermost 8066, Gateway 8082).
+- [x] Real human Mattermost connection report received a Codex classification through Switch.
+- [x] Three-agent private room provisioned with separate workspaces and validated thread instructions.
+- [x] Triage delegated CR-001 to Engineer through Switch; Sentinel posted its evidence contract while awaiting a proposed SHA.
+- [x] Controlled demo baseline has four passing and two failing tests; USDC output is actually incorrect.
+- [x] Failed-turn Retry integrated into the dashboard and CLI using native controller contracts; real Engineer retry applied and execution resumed in the original thread.
+- [x] Private selected provider key read from the builder's file, with existing provider URL/auth configuration retained.
+- [x] Optional native model selection on Retry for the three builder-confirmed models.
+- [x] Publication inspector and publisher implemented with fresh authenticated-history checks at each publication boundary; source-scope and separate-snapshot checks prepared.
+- [x] 59 automated checks pass, covering publication failures, history integrity, retry state and actual Unix socket/IPC forwarding.
+- [x] Live evidence dashboard verified on desktop/mobile; unauthenticated state and decisions without origin/CSRF verification are refused.
+- [x] Engineer captured baseline failures, created tested source-only commit 4972a245fefdb72792c42eb833b813136b8e3cfa and posted structured proposal evidence.
+- [x] Sentinel independently verified the exact proposed SHA: six tests, whitespace checks and additional decimal/precision probes passed.
+- [ ] Human decision on the reviewed SHA recorded.
+- [ ] Live publication gate succeeds and a real GitHub PR is opened.
+- [ ] Public project repository, actual demo video and submission.
 
-Existing global Codex thread-history database fails its integrity check. Switch creates separate native session homes; the existing database was not repaired or deleted.
+CR-001 is awaiting human approval on the reviewed SHA. Earlier provider errors and shell runtime/PATH failures remain visible. The successful retry reused Triage's original Engineer handoff; it did not repost a report. A native applied receipt means the retry was scheduled, not that the incident is fixed.
 
-Current infrastructure startup is downloading images; no containers are ready and no live Mattermost reply has been verified. A first verbose download was interrupted and restarted with quiet progress. The live workflow and dashboard remain future build gates.
+The global Codex history-integrity warning was not repaired or deleted. Chainroom uses a separate native provider home. Current [resume instructions](RESUME.md) identify the room, original report, accepted retry and next steps.
 
-Verification completed: all JavaScript scripts pass syntax checks, both templates parse as YAML (one-agent smoke and three-agent workflow), the reviewed Compose checksum matches, bootstrap preserves existing credentials, the independent demo working tree is clean, and private credentials/runtime/downloads are excluded from Git. API helpers await a running-server check.
+Live review-only publication inspection is ready and the normal gate reports missing_human_decision. Both role snapshots are physically distinct and clean at the reviewed SHA. The verified browser view displays its actual source diff and decision controls.

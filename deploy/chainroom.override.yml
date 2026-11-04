@@ -2,3 +2,5 @@ services:
   switch:
     environment:
       CONTROLLER_RELEASE_VERSION: ${CONTROLLER_RELEASE_VERSION}
+      CONTROLLER_RELEASE_URL: https://github.com/sandbox-quantum/switch/releases/download/switch-agent-controller-v0.31.1-dev.277.g2d72c57/switch-agent-controller-0.31.1-dev.277.g2d72c57.tgz
+      CONTROLLER_RELEASE_SHA256: 8f096275edde4b87dacea9c565c96b30eef756156274149c64cc40b582ac09bf

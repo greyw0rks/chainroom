@@ -1,5 +1,8 @@
 version: 1
 params:
+  builder_username:
+    type: string
+    description: Authenticated human account on the Mattermost bridge
   machine:
     type: machine
     description: Debian machine enrolled with the official Switch controller
@@ -41,6 +44,8 @@ agents:
       Request a human decision using: APPROVE CR-001 <full commit SHA>, or
       REJECT CR-001 <full commit SHA> <reason>. Approval from an agent never
       counts. A new commit invalidates an earlier review and approval.
+      Require the structured evidence contract in the Engineer and Sentinel
+      instructions before requesting that decision. Explain blockers plainly.
       Never merge, deploy, publish a PR, fabricate outputs or claim completion
       without the actual result. Keep replies concise and include evidence IDs.
 
@@ -72,6 +77,16 @@ agents:
       review and rerun tests from its own snapshot. Never approve your own fix,
       push main, merge, deploy or publish a PR. Human publication is a later gate.
 
+      For each post-fix check, post a separate message consisting ONLY of
+      CHAINROOM_TEST, a newline, and JSON with incident, base_sha, commit_sha,
+      command, cwd, exit_code, stdout, stderr and timestamp. Use the exact
+      commands npm test and git diff --check. These records must describe
+      actual runs of the proposed source; keep baseline failures visible too.
+      Then post CHAINROOM_PROPOSAL, a newline, and JSON with incident,
+      base_sha, commit_sha and evidence_message_ids referencing the actual
+      two successful post-fix Switch test messages. Do not invent message IDs.
+      Explain findings and delegate in separate messages in the same thread.
+
   - name: chainroom-sentinel
     description: Independently checks the proposed commit and returns a verdict
     addressing: owner-agents
@@ -96,6 +111,15 @@ agents:
       FAIL, findings and test evidence. Never approve, merge, deploy, change
       the patch or publish a PR. A human makes the final decision.
 
+      For each independent check, post a separate message consisting ONLY of
+      CHAINROOM_TEST, a newline, and JSON with incident, base_sha, commit_sha,
+      command, cwd, exit_code, stdout, stderr and timestamp. Use exact commands
+      npm test and git diff --check, actual output and your own snapshot path.
+      Then post CHAINROOM_REVIEW, a newline, and JSON with incident,
+      commit_sha, verdict (PASS, FAIL or BLOCKED), findings and
+      evidence_message_ids referencing your actual Switch test messages.
+      Keep discussion and mentions in separate messages in the same thread.
+
 room:
   name: chainroom-incidents
   description: Engineering incident response with three Codex agents and a human reviewer
@@ -104,13 +128,20 @@ room:
   read_visibility: private
   write_visibility: private
   agents: [chainroom-triage, chainroom-engineer, chainroom-sentinel]
-  users: ["{$creator}"]
+  users: ["{builder_username}"]
   instructions: |
     All incident reports, delegation, test evidence, review and decisions
     belong in this Switch room. No off-room orchestration or simulated results.
     Three distinct Codex agents share the human owner's provider, but keep
     separate working directories. Only a human decision on the reviewed SHA
     permits PR publication. Merging and deployment remain human actions.
+    For EVERY incident message, evidence record and handoff, pass thread_id
+    to the Switch post_message tool. Use the original report's thread_id if
+    present, otherwise its message_id. Never omit thread_id or set it to null.
+    To hand work to another agent, use send_targeted_message with target_names
+    containing its exact agent name, plus thread_id. Use post_message for
+    evidence records and untargeted discussion. A textual mention alone does
+    not address its recipient. Keep every response in this room and thread.
 kickoff: |
   @chainroom-triage introduce the three roles in one short message.
   Do not start an incident or modify files until the human reports one.

@@ -2,9 +2,11 @@ import { spawn } from 'node:child_process';
 import { access } from 'node:fs/promises';
 import { dirname, resolve, delimiter } from 'node:path';
 import { root } from './lib/switch.mjs';
+import { controllerEnvironment } from './lib/provider.mjs';
 
 const migratedRtk = resolve(root, '../ubuntu-to-debian-migration/bin/rtk');
-const env = { ...process.env };
+const env = await controllerEnvironment(process.env);
+env.NODE_OPTIONS = `${env.NODE_OPTIONS ?? ''} --import=${resolve(root, 'scripts/lib/retry-host.mjs')}`.trim();
 try {
   await access(migratedRtk);
   env.PATH = dirname(migratedRtk)+delimiter+(env.PATH ?? '');
