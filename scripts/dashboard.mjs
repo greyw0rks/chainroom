@@ -31,8 +31,14 @@ async function state() {
     const r = spawnSync('git', ['-C', repository, 'diff', review.base_sha, review.commit_sha], { encoding: 'utf8' });
     if (r.status === 0) diff = r.stdout;
   }
+  let publication;
+  try {
+    const receipt = JSON.parse(await readFile(resolve(root, '.runtime/evidence/publication.json'), 'utf8'));
+    if (gate.allowed && receipt.incident === 'CR-001' && receipt.head_sha === gate.commit_sha &&
+        /^https:\/\/github\.com\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+\/pull\/\d+$/.test(receipt.url)) publication = receipt;
+  } catch (error) { if (error.code !== 'ENOENT' && !(error instanceof SyntaxError)) throw error; }
   return { checked_at: new Date().toISOString(), room_id: roomId, thread_id: threadId,
-    viewer: user.name, report, messages: page.messages, gate, review, diff, has_more: page.hasMore,
+    viewer: user.name, report, messages: page.messages, gate, review, diff, publication, has_more: page.hasMore,
     retries: await workflowRetries({ provision, roomId, threadId }), provider_models: providerModels };
 }
 const json = (res, code, body) => { res.writeHead(code, { 'content-type': 'application/json', 'cache-control': 'no-store' }); res.end(JSON.stringify(body)); };

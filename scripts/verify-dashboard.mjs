@@ -24,6 +24,10 @@ if (state.review?.review_ready) {
   if (!state.diff?.includes('src/balance.ts') || !await page.locator('#diff-panel').isVisible()) throw new Error('Reviewed commit must show its actual source diff.');
   if (!await page.getByRole('button', { name: 'Approve this commit', exact: true }).isVisible()) throw new Error('Reviewed commit decision is unavailable.');
 }
+if (state.publication) {
+  await page.locator('#publication-panel').waitFor({ state: 'visible' });
+  if (await page.locator('#publication-link').getAttribute('href') !== state.publication.url) throw new Error('Dashboard publication link differs from the recorded PR.');
+}
 await mkdir(resolve(root, '.runtime/evidence'), { recursive: true, mode: 0o700 });
 await page.screenshot({ path: resolve(root, '.runtime/evidence/dashboard-desktop.png'), fullPage: true });
 await page.setViewportSize({ width: 390, height: 844 });
@@ -32,5 +36,5 @@ if (await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)
 if (errors.length) throw new Error(errors.join('\n'));
 console.log(JSON.stringify({ dashboard: 'passed', desktop_mobile: true, unauthorized_reads_refused: true,
   csrf_decisions_and_retries_refused: true, review_ready: state.review?.review_ready === true,
-  reviewed_sha: state.review?.commit_sha, approval_posted: false }));
+  reviewed_sha: state.review?.commit_sha, publication_url: state.publication?.url, approval_posted: false }));
 await browser.close();

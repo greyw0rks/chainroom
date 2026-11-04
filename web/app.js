@@ -13,8 +13,13 @@ async function refresh() {
     current = data;
     $('connection').textContent = '● Live · Switch';
     $('timestamp').textContent = `Checked ${new Date(data.checked_at).toLocaleTimeString()}${data.has_more ? ' · Recent messages; full approval history is checked separately.' : ''}`;
-    $('gate').textContent = data.gate.allowed ? 'Approved commit is eligible for the publication command.' : phrases[data.gate.reason] ?? data.gate.reason.replaceAll('_', ' ');
-    $('status').textContent = data.gate.allowed ? 'APPROVED' : data.review?.review_ready ? 'AWAITING APPROVAL' : data.report ? 'IN PROGRESS' : 'REPORTED';
+    $('gate').textContent = data.publication ? 'Pull request publication is recorded for this approved commit.' : data.gate.allowed ? 'Approved commit is eligible for the publication command.' : phrases[data.gate.reason] ?? data.gate.reason.replaceAll('_', ' ');
+    $('status').textContent = data.publication ? 'PR PUBLISHED' : data.gate.allowed ? 'APPROVED' : data.review?.review_ready ? 'AWAITING APPROVAL' : data.report ? 'IN PROGRESS' : 'REPORTED';
+    $('publication-panel').hidden = !data.publication;
+    if (data.publication) {
+      $('publication-link').href = data.publication.url;
+      $('publication-time').textContent = `Recorded ${new Date(data.publication.published_at).toLocaleString()} · ${data.publication.head_sha}`;
+    }
     const actions = $('retry-actions'); actions.replaceChildren();
     const failed = data.retries?.filter(turn => turn.retryable) ?? [];
     $('retry-status').textContent = failed.length ? 'Retry a failed turn using the same session and incident thread.' : data.retries?.some(turn => turn.busy) ? 'Agents are working. Retry becomes available if a turn fails.' : 'No failed turn needs a retry.';

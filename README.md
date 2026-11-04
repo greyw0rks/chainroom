@@ -4,6 +4,8 @@ An engineering incident room where three Codex agents coordinate through Switch 
 
 Solo build for Flip the Switch's Best Business Workflow track. The initial fixture is an intentionally introduced USDC-decimals regression; this project does not claim a real customer incident.
 
+The first live incident completed the report → Triage → Engineer → Sentinel → human approval → PR workflow. [Demo PR #1](https://github.com/greyw0rks/chainroom-demo/pull/1) contains the exact reviewed commit `4972a245fefdb72792c42eb833b813136b8e3cfa`; the demo's main branch preserves the failing baseline. Both roles passed all six tests independently, and Sentinel also passed 666 balance cases across decimals 0–36. Chainroom's 59 automated checks pass. See the [live milestone record](docs/live-milestone.md) for evidence and limits.
+
 The [implementation blueprint](docs/implementation-blueprint.md) covers architecture, agent contracts, approval rules, build gates and first commands. The [Switch template](templates/chainroom.template.yaml) creates Triage, Engineer, Sentinel and a private Mattermost-backed room. The [demo repository](demo/README.md) has real TypeScript code and executable failing tests.
 
 ```sh
@@ -19,7 +21,7 @@ Windows browser access on this machine: Gateway http://127.0.0.1:8082 and Matter
 
 Run `npm run check:stack` before enrollment. It checks Switch readiness, the Gateway page and Mattermost's ping endpoint, saves a timestamped result to `.runtime/evidence/stack-health.json`, and exits unsuccessfully while any service is unavailable.
 
-The [publication eligibility inspector](docs/publication-gate.md) checks authenticated authors, independent evidence, human approval and the proposed Git commit. The publication command repeats these checks before pushing the exact commit and opening a PR. Run its automated failure cases with `npm test`. A real reviewed commit, human approval and PR are still required.
+The [publication eligibility inspector](docs/publication-gate.md) checks authenticated authors, independent evidence, human approval and the proposed Git commit. The publication command repeats these checks before pushing the exact commit and opening a PR. Run its automated failure cases with `npm test`. The first live publication passed these checks; each future publication needs its own current review and approval.
 
 Start the local evidence dashboard with `npm run dashboard`, then open http://127.0.0.1:3018. It shows live Switch history, failed-turn Retry and reviewed-commit decisions. Retry sends the controller's native `message.retry` command for the original message, preserving the incident thread. Choose the current model or one of `gpt-6.1-sol`, `gpt-6-astra`, and `gpt-5.6-sol`. Running and completed turns cannot be retried. The CLI equivalent is `npm run retry -- engineer` or `npm run retry -- engineer gpt-6-astra`.
 
